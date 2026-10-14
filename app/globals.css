@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant group-open (&:is(:where(.group):is(:hover, :focus) *));
+
 :root {
   --background: #ffffff;
   --foreground: #000000;

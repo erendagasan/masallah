@@ -5,39 +5,65 @@ import Image from "next/image";
 import sharp from "sharp";
 import OutfitStack, { type OutfitItem } from "@/components/outfit-stack";
 
-const catalog: Record<string, { name: string; price: number; order: number }> =
-  {
-    "05755301707-f1.png": {
-      name: "Knitted sweater",
-      price: 79.99,
-      order: 1,
-    },
-    "06861740800-f1.png": {
-      name: "Black wide-leg trousers",
-      price: 49.99,
-      order: 2,
-    },
-    "12016821800-f1.png": {
-      name: "Black chukka boots",
-      price: 69.99,
-      order: 3,
-    },
-    "02521021700-f1.png": {
-      name: "Black leather jacket",
-      price: 199.99,
-      order: 1,
-    },
-    "01195331981-f1.png": {
-      name: "Light blue shirt",
-      price: 49.95,
-      order: 2,
-    },
-    "00706740710-f1.png": {
-      name: "Beige pleated trousers",
-      price: 35.95,
-      order: 3,
-    },
-  };
+const catalog: Record<
+  string,
+  { name: string; price: number; order: number; url?: string }
+> = {
+  "05755301707-f1.png": {
+    name: "Knitted sweater",
+    price: 79.99,
+    order: 1,
+  },
+  "06861740800-f1.png": {
+    name: "Black wide-leg trousers",
+    price: 49.99,
+    order: 2,
+  },
+  "12016821800-f1.png": {
+    name: "Black chukka boots",
+    price: 69.99,
+    order: 3,
+  },
+  "02521021700-f1.png": {
+    name: "Black leather jacket",
+    price: 199.99,
+    order: 1,
+  },
+  "01195331981-f1.png": {
+    name: "Light blue shirt",
+    price: 49.95,
+    order: 2,
+  },
+  "00706740710-f1.png": {
+    name: "Beige pleated trousers",
+    price: 35.95,
+    order: 3,
+  },
+  "04216305800-f1.png": {
+    name: "Black cardigan",
+    price: 49.95,
+    order: 1,
+    url: "https://www.zara.com/de/en/100-wool-regular-fit-cardigan-p04216305.html?v1=545446990",
+  },
+  "cleaned-tee.png": {
+    name: "White t-shirt",
+    price: 12.95,
+    order: 2,
+    url: "https://www.zara.com/de/en/basic-slim-fit-t-shirt--01-p05584401.html?v1=555528684",
+  },
+  "01195327700-f1.png": {
+    name: "Brown wide-leg trousers",
+    price: 39.95,
+    order: 3,
+    url: "https://www.zara.com/de/en/relaxed-fit-flowing-pleated-trousers-p01195327.html?v1=545447393",
+  },
+  "12649820800-f1.png": {
+    name: "Leather penny loafers",
+    price: 69.95,
+    order: 4,
+    url: "https://www.zara.com/de/en/leather-penny-loafers-p12649820.html?v1=584711251",
+  },
+};
 
 const publicDir = path.join(process.cwd(), "public", "catalog");
 
@@ -55,34 +81,6 @@ async function topMarginFraction(file: string) {
   return 0;
 }
 
-async function ensureTransparentPng(imagePath: string) {
-  const pngPath = imagePath.replace(/\.jpe?g$/i, ".png");
-  if (fs.existsSync(pngPath)) return;
-
-  const { data, info } = await sharp(imagePath)
-    .removeAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const { width, height, channels } = info;
-  const pixels = width * height;
-  const out = Buffer.alloc(pixels * 4);
-  for (let i = 0; i < pixels; i++) {
-    const r = data[i * channels];
-    const g = data[i * channels + 1];
-    const b = data[i * channels + 2];
-    const min = Math.min(r, g, b);
-    const alpha =
-      min >= 250 ? 0 : min <= 242 ? 255 : Math.round((255 * (250 - min)) / 8);
-    out[i * 4] = r;
-    out[i * 4 + 1] = g;
-    out[i * 4 + 2] = b;
-    out[i * 4 + 3] = alpha;
-  }
-  await sharp(out, { raw: { width, height, channels: 4 } })
-    .png()
-    .toFile(pngPath);
-}
-
 async function getOutfits() {
   const entries = fs
     .readdirSync(publicDir, { withFileTypes: true })
@@ -93,11 +91,6 @@ async function getOutfits() {
     entries.map(async (entry) => {
       const folder = entry.name;
       const dir = path.join(publicDir, folder);
-      for (const file of fs.readdirSync(dir)) {
-        if (/\.jpe?g$/i.test(file)) {
-          await ensureTransparentPng(path.join(dir, file));
-        }
-      }
       const files = fs
         .readdirSync(dir)
         .filter((file) => /\.png$/i.test(file))
@@ -110,6 +103,7 @@ async function getOutfits() {
         src: `/catalog/${folder}/${file}`,
         alt: catalog[file]?.name ?? file,
         price: catalog[file]?.price ?? 0,
+        url: catalog[file]?.url,
       }));
       const total = items.reduce((sum, item) => sum + item.price, 0);
       const topOffset = files.length
@@ -126,8 +120,9 @@ const outfits = await getOutfits();
 
 export default function Home() {
   return (
-    <main className="flex-1 overflow-x-clip px-8 pb-8 md:grid md:grid-cols-10 md:grid-rows-10 md:pt-16">
-      <header className="sticky top-0 z-20 -mx-8 flex items-center gap-2 bg-background px-8 py-4 md:static md:col-start-1 md:row-start-1 md:mx-0 md:self-start md:px-0 md:py-0">
+    <>
+      <main className="flex-1 overflow-x-clip px-8 pb-8 md:grid md:grid-cols-10 md:grid-rows-10 md:pt-16">
+      <header className="sticky top-0 z-20 -mx-8 flex items-center gap-2 px-8 py-4 md:static md:col-start-1 md:row-start-1 md:mx-0 md:self-start md:px-0 md:py-0">
         <h1 className="text-[16px] font-semibold tracking-tight">masallah</h1>
         <Image
           src="/nazar-boncugu.svg"
@@ -153,6 +148,28 @@ export default function Home() {
           </div>
         ))}
       </section>
-    </main>
+      </main>
+      <footer className="flex items-center gap-8 bg-black px-8 py-6 text-white">
+        <a
+          href="https://instagram.com"
+          target="_blank"
+          rel="noreferrer"
+          className="underline"
+        >
+          instagram
+        </a>
+        <a
+          href="https://tiktok.com"
+          target="_blank"
+          rel="noreferrer"
+          className="underline"
+        >
+          tiktok
+        </a>
+        <a href="#" className="underline">
+          contact
+        </a>
+      </footer>
+    </>
   );
 }
