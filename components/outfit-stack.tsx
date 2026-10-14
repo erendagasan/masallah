@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 export type OutfitItem = {
   src: string;
@@ -33,8 +36,38 @@ export default function OutfitStack({
   items: OutfitItem[];
   eager?: boolean;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const touch = window.matchMedia("(hover: none)");
+    let observer: IntersectionObserver | null = null;
+
+    const sync = () => {
+      if (touch.matches && !observer) {
+        observer = new IntersectionObserver(
+          ([entry]) => el.toggleAttribute("data-open", entry.isIntersecting),
+          { threshold: 0.75 },
+        );
+        observer.observe(el);
+      } else if (!touch.matches && observer) {
+        observer.disconnect();
+        observer = null;
+        el.removeAttribute("data-open");
+      }
+    };
+
+    sync();
+    touch.addEventListener("change", sync);
+    return () => {
+      observer?.disconnect();
+      touch.removeEventListener("change", sync);
+    };
+  }, []);
+
   return (
-    <div tabIndex={0} className="group relative aspect-[2/3] w-72 md:w-80 focus:outline-none">
+    <div ref={ref} className="group relative aspect-[2/3] w-72 md:w-80">
       {items.map((item, i) => {
         const slot = layout[Math.min(i, layout.length - 1)];
         return (

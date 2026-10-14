@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
-@custom-variant group-open (&:is(:where(.group):is(:hover, :focus) *));
+@custom-variant group-open {
+  @media (hover: hover) {
+    &:is(:where(.group):hover *) {
+      @slot;
+    }
+  }
+  &:is(:where(.group)[data-open] *) {
+    @slot;
+  }
+}
 
 :root {
   --background: #ffffff;
