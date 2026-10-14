@@ -106,39 +106,16 @@ export default function OutfitStack({
       </div>
       {open && (
         <>
-          <div
-            onClick={toggle}
-            className="absolute inset-0 z-50 -left-[45%] -right-[35%] -top-[1.5rem] bg-white md:top-[calc(var(--pull)*30rem-1.5rem)]"
-          />
-          <div
-            onClick={toggle}
-            className="absolute inset-0 z-50 overflow-y-auto p-4 md:top-[calc(var(--pull)*30rem)]"
-          >
+          <div className="absolute inset-0 z-50 -left-[45%] -right-[35%] -top-[1.5rem] bg-white md:top-[calc(var(--pull)*30rem-1.5rem)]" />
+          <div className="absolute inset-0 z-50 overflow-y-auto p-4 md:top-[calc(var(--pull)*30rem)]">
             <div className="flex min-h-full flex-col justify-center gap-3">
             <button
               type="button"
               aria-label="back"
-              onClick={(event) => {
-                event.stopPropagation();
-                toggle();
-              }}
+              onClick={toggle}
               className="cursor-pointer self-start p-1"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M10 3 5 8l5 5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              {"<-"}
             </button>
             <ul className="flex flex-col gap-3">
           {items.map((item) => {
@@ -164,7 +141,6 @@ export default function OutfitStack({
                     href={item.url}
                     target="_blank"
                     rel="noreferrer"
-                    onClick={(event) => event.stopPropagation()}
                     className="flex items-center gap-3"
                   >
                     {row}
