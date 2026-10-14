@@ -10,55 +10,55 @@ const catalog: Record<
   { name: string; price: number; order: number; url?: string }
 > = {
   "05755301707-f1.png": {
-    name: "Knitted sweater",
+    name: "knitted sweater",
     price: 79.99,
     order: 1,
   },
   "06861740800-f1.png": {
-    name: "Black wide-leg trousers",
+    name: "black wide-leg trousers",
     price: 49.99,
     order: 2,
   },
   "12016821800-f1.png": {
-    name: "Black chukka boots",
+    name: "black chukka boots",
     price: 69.99,
     order: 3,
   },
   "02521021700-f1.png": {
-    name: "Black leather jacket",
+    name: "black leather jacket",
     price: 199.99,
     order: 1,
   },
   "01195331981-f1.png": {
-    name: "Light blue shirt",
+    name: "light blue shirt",
     price: 49.95,
     order: 2,
   },
   "00706740710-f1.png": {
-    name: "Beige pleated trousers",
+    name: "beige pleated trousers",
     price: 35.95,
     order: 3,
   },
   "04216305800-f1.png": {
-    name: "Black cardigan",
+    name: "black cardigan",
     price: 49.95,
     order: 1,
     url: "https://www.zara.com/de/en/100-wool-regular-fit-cardigan-p04216305.html?v1=545446990",
   },
   "cleaned-tee.png": {
-    name: "White t-shirt",
+    name: "white t-shirt",
     price: 12.95,
     order: 2,
     url: "https://www.zara.com/de/en/basic-slim-fit-t-shirt--01-p05584401.html?v1=555528684",
   },
   "01195327700-f1.png": {
-    name: "Brown wide-leg trousers",
+    name: "brown wide-leg trousers",
     price: 39.95,
     order: 3,
     url: "https://www.zara.com/de/en/relaxed-fit-flowing-pleated-trousers-p01195327.html?v1=545447393",
   },
   "12649820800-f1.png": {
-    name: "Leather penny loafers",
+    name: "leather penny loafers",
     price: 69.95,
     order: 4,
     url: "https://www.zara.com/de/en/leather-penny-loafers-p12649820.html?v1=584711251",
@@ -132,7 +132,7 @@ export default function Home() {
           priority
         />
       </header>
-      <section className="grid grid-cols-1 justify-items-center gap-y-24 md:col-start-2 md:col-end-11 md:row-start-1 md:row-end-11 md:grid-cols-3 md:content-start md:gap-y-12">
+      <section className="grid grid-cols-1 justify-items-center gap-y-24 md:col-start-2 md:col-end-11 md:row-start-1 md:row-end-11 md:grid-cols-3 md:content-start">
         {outfits.map((outfit, i) => (
           <div key={outfit.folder} className="relative hover:z-10">
             <div
