@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
@@ -125,8 +126,8 @@ const outfits = await getOutfits();
 
 export default function Home() {
   return (
-    <main className="grid flex-1 grid-cols-10 grid-rows-10 overflow-x-clip px-8 pb-8 pt-16">
-      <header className="col-start-1 row-start-1 self-start flex items-center gap-2">
+    <main className="flex-1 overflow-x-clip px-8 pb-8 md:grid md:grid-cols-10 md:grid-rows-10 md:pt-16">
+      <header className="sticky top-0 z-20 -mx-8 flex items-center gap-2 bg-background px-8 py-4 md:static md:col-start-1 md:row-start-1 md:mx-0 md:self-start md:px-0 md:py-0">
         <h1 className="text-[16px] font-semibold tracking-tight">masallah</h1>
         <Image
           src="/nazar-boncugu.svg"
@@ -136,10 +137,13 @@ export default function Home() {
           priority
         />
       </header>
-      <section className="col-start-2 col-end-11 row-start-1 row-end-11 grid content-start grid-cols-3 justify-items-center gap-y-12">
+      <section className="grid grid-cols-1 justify-items-center gap-y-24 md:col-start-2 md:col-end-11 md:row-start-1 md:row-end-11 md:grid-cols-3 md:content-start md:gap-y-12">
         {outfits.map((outfit, i) => (
           <div key={outfit.folder} className="relative hover:z-10">
-            <div style={{ marginTop: `-${(outfit.topOffset * 150).toFixed(2)}%` }}>
+            <div
+              className="md:-mt-[calc(var(--pull)*30rem)]"
+              style={{ "--pull": String(outfit.topOffset) } as CSSProperties}
+            >
               <OutfitStack items={outfit.items} eager={i < 3} />
               <div className="mt-6">
                 <p>{outfit.folder}</p>

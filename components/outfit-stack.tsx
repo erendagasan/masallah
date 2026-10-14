@@ -31,7 +31,7 @@ export default function OutfitStack({
   eager?: boolean;
 }) {
   return (
-    <div className="group relative aspect-[2/3] w-52 sm:w-80">
+    <div className="group relative aspect-[2/3] w-72 md:w-80">
       {items.map((item, i) => {
         const slot = layout[Math.min(i, layout.length - 1)];
         return (
@@ -43,7 +43,7 @@ export default function OutfitStack({
               src={item.src}
               alt={item.alt}
               fill
-              sizes="(min-width: 640px) 20rem, 13rem"
+              sizes="(min-width: 768px) 20rem, 18rem"
               loading={eager ? "eager" : undefined}
               className="object-cover"
             />
